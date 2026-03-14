@@ -1,0 +1,101 @@
+# PyzaNode Game Selector - example configuration
+#
+# This plugin shows how to:
+# - Call the PyzaNode controller API from a Bukkit/Spigot/Paper server using the Java client
+# - Get or create a server in a group, then send the player there (via BungeeCord plugin messaging)
+# - Make the GUI layout and behaviour highly configurable for other server owners
+#
+# NOTE:
+# - This plugin expects that your proxies (Velocity/Bungee) are already integrated with PyzaNode
+#   so that a server's "short_code" or name is routable (e.g. /server hub1).
+# - The plugin uses the PyzaNode Java API's getOrCreateServerForGroup() helper, which:
+#   - Finds a running server in a group, or
+#   - Scales the group and waits for a new server to come online, then returns its host:port + name.
+
+pyzanode:
+  # Controller base URL (no trailing slash).
+  controller-url: "http://127.0.0.1:9451"
+
+  # API token from the PyzaNode dashboard (Settings -> API key).
+  # Keep this secret; do not share publicly.
+  api-token: "PASTE_API_TOKEN_HERE"
+
+  # Timeout (in seconds) to wait for a new server to be created and become running when none are available.
+  create-timeout-seconds: 90
+
+  # How often, in seconds, to refresh cached group/server info in the background (for placeholders, etc.)
+  cache-refresh-seconds: 10
+
+  # Optional: default preset ID to use for groups that don't override one in gui.entries
+  # (You can leave this empty and configure preset-id per button below.)
+  default-preset-id: ""
+
+menu:
+  # Inventory title & size
+  title: "&aSelect a game"
+  rows: 3
+
+  # Whether to fill all empty slots with a filler item.
+  filler:
+    enabled: true
+    material: "GRAY_STAINED_GLASS_PANE"
+    name: "&7"
+    lore: []
+
+  # Entries define each clickable item in the GUI.
+  # Owners can freely change slots / materials / groups / presets here without touching code.
+  entries:
+    # Example: a "Lobby" group selector
+    lobby:
+      slot: 11                       # 0-26 for a 3-row menu
+      material: "NETHER_STAR"
+      name: "&bJoin Lobby"
+      lore:
+        - "&7You will be sent to an existing"
+        - "&7lobby server, or a new one will"
+        - "&7be created automatically."
+        - ""
+        - "&fGroup: &aLobby"
+      group: "Lobby"                 # PyzaNode server group name
+      preset-id: ""                  # Optional; overrides default-preset-id
+      permission: ""                 # Optional permission required to click (empty = no permission check)
+      open-sound: "UI_BUTTON_CLICK"  # Bukkit sound to play on click
+
+    survival:
+      slot: 15
+      material: "DIAMOND_SWORD"
+      name: "&aSurvival"
+      lore:
+        - "&7Scale-out survival servers."
+        - "&7If all are full or offline,"
+        - "&7a new server will be created."
+        - ""
+        - "&fGroup: &aSurvival"
+      group: "Survival"
+      preset-id: ""                  # Optional; overrides default-preset-id
+      permission: ""
+      open-sound: "UI_BUTTON_CLICK"
+
+messages:
+  prefix: "&8[&aPyzaNode&8] "
+
+  open-menu: "&7Opening game selector..."
+  no-permission: "&cYou do not have permission to use that."
+  sending-player: "&7Sending you to &a%server_name%&7..."
+  creating-server: "&7No servers are currently available. &aCreating one now&7, please wait..."
+  no-server-available: "&cNo server could be created or found for that game. Please try again later."
+  controller-error: "&cCould not contact the controller. Please try again later."
+
+  # PlaceholderAPI placeholders this plugin exposes (if PlaceholderAPI is installed):
+  # - %pyzanode_group_<key>_target%   (configured key from menu.entries, e.g. lobby, survival)
+  # - %pyzanode_group_<key>_host%     (last host used when connecting a player)
+  # - %pyzanode_group_<key>_port%     (last port used)
+
+bungee:
+  # BungeeCord plugin messaging channel name.
+  channel: "BungeeCord"
+
+  # Name of the sub-channel / command to use for sending a player.
+  # Usually "Connect", but can be customized if you use a proxy helper plugin.
+  connect-subchannel: "Connect"
+

@@ -1,0 +1,117 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.pyzatech.pyzanode</groupId>
+  <artifactId>pyzanode-game-selector</artifactId>
+  <version>1.0.0</version>
+  <packaging>jar</packaging>
+
+  <name>PyzaNodeGameSelector</name>
+  <description>Example GUI selector plugin that uses the PyzaNode API to send players to scaled game servers.</description>
+  <url>https://github.com/pyzanode/pyzanode-game-selector</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <!-- Build against a modern Spigot API but keep code compatible with Bukkit/Spigot/Paper across many versions. -->
+    <spigot.version>1.20.4-R0.1-SNAPSHOT</spigot.version>
+    <pyzanode.api.version>1.0.0</pyzanode.api.version>
+  </properties>
+
+  <repositories>
+    <!-- Spigot / Paper API -->
+    <repository>
+      <id>spigotmc-repo</id>
+      <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+    </repository>
+    <repository>
+      <id>sonatype</id>
+      <url>https://oss.sonatype.org/content/groups/public/</url>
+    </repository>
+    <!-- PizzaThatCodes Maven (PyzaNode API) - matches landing wiki docs -->
+    <repository>
+      <id>pizzathatcodes-repo-releases</id>
+      <name>PizzaThatCodes Repositories</name>
+      <url>https://maven.pizzalover.dev/releases</url>
+    </repository>
+    <!-- PlaceholderAPI (on CodeMC) -->
+    <repository>
+      <id>placeholderapi</id>
+      <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+    </repository>
+    <!-- Local / custom Maven for pyzanode-api (install from this mono-repo's maven-api module) -->
+    <repository>
+      <id>local-maven</id>
+      <url>file://${user.home}/.m2/repository</url>
+    </repository>
+  </repositories>
+
+  <dependencies>
+    <!-- Bukkit / Spigot / Paper API -->
+    <dependency>
+      <groupId>org.spigotmc</groupId>
+      <artifactId>spigot-api</artifactId>
+      <version>${spigot.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- PyzaNode Java API client (built from this repo's maven-api module) -->
+    <dependency>
+      <groupId>com.pyzatech.pyzanode</groupId>
+      <artifactId>pyzanode-api</artifactId>
+      <version>${pyzanode.api.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <!-- PlaceholderAPI expansion support (optional, provided by server if installed) -->
+    <dependency>
+      <groupId>me.clip</groupId>
+      <artifactId>placeholderapi</artifactId>
+      <version>2.11.5</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.11.0</version>
+        <configuration>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
+        </configuration>
+      </plugin>
+
+      <!-- Shade pyzanode-api into the plugin JAR so server owners don't need to install it separately. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.5.3</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
+              <relocations>
+                <relocation>
+                  <pattern>com.pyzatech.pyzanode.client</pattern>
+                  <shadedPattern>com.pyzatech.pyzanode.gameselector.shaded.client</shadedPattern>
+                </relocation>
+              </relocations>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+

@@ -1,0 +1,27 @@
+name: PyzaNodeGameSelector
+main: com.pyzatech.pyzanode.gameselector.PyzaNodeGameSelectorPlugin
+version: 1.0.0
+api-version: 1.13
+author: PyzaNode
+website: https://pyzanode.pyzatech.com
+description: Example GUI selector that uses PyzaNode to spin up and route players to game servers.
+
+depend: []
+softdepend:
+  - PlaceholderAPI
+
+commands:
+  gameselector:
+    description: Open the PyzaNode game selector GUI.
+    usage: /<command>
+    aliases: [games, pzags]
+    permission: pyzanode.gameselector.open
+
+permissions:
+  pyzanode.gameselector.open:
+    description: Allows a player to open the game selector GUI.
+    default: true
+  pyzanode.gameselector.admin:
+    description: Allows reloading config and seeing debug messages.
+    default: op
+
