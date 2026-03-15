@@ -5,11 +5,9 @@ Example Bukkit/Spigot/Paper plugin that demonstrates how to:
 - Call the **PyzaNode controller API** from a Minecraft plugin using the Java client (`pyzanode-api`)
 - Open a configurable **GUI game selector**
 - For a chosen **server group**:
-  - Find an existing running server _or_
+  - Find an existing running server *or*
   - Create a new server via PyzaNode if none are available
   - Then send the player to that server via BungeeCord plugin messaging
-
-This is designed as a **reference plugin** – heavily commented and very configurable – so other owners can copy/modify it for their own networks.
 
 ---
 
@@ -30,54 +28,30 @@ This is designed as a **reference plugin** – heavily commented and very config
 
 ---
 
-## Project layout
-
-This folder (`PyzaNodeGameSelector/`) is a standalone **Maven** project.
-
-- `pom.xml` – Maven build (shades `pyzanode-api` into the plugin jar)
-- `src/main/resources/plugin.yml` – Bukkit plugin descriptor
-- `src/main/resources/config.yml` – Highly configurable GUI & PyzaNode settings
-- `src/main/java/com/pyzatech/pyzanode/gameselector/...` – Plugin source
-
----
-
 ## Building
 
-1. **Install / build the PyzaNode API client** (once):
-
-   From the root of this mono-repo (where `maven-api/` lives):
-
-   ```bash
-   cd maven-api
-   ./gradlew publishToMavenLocal   # or 'gradlew.bat publishToMavenLocal' on Windows
-   ```
-
-   This installs `com.pyzatech.pyzanode:pyzanode-api:1.0.0` into your local `~/.m2/repository`.
-
-2. **Build the Game Selector plugin**:
-
-   ```bash
+1. **Clone the repo** (requires Git, Java 17+, and Maven).
+  ```bash
+   git clone https://github.com/PyzaNode/PyzaNodeGameSelector.git
+  ```
+2. **Go to the project directory:**
+  ```bash
    cd PyzaNodeGameSelector
-   mvn clean package
-   ```
-
-   The plugin jar will be at:
-
-   ```text
-   target/pyzanode-game-selector-1.0.0.jar
-   ```
+  ```
+3. **Build:**
+  ```bash
+   mvn clean compile
+  ```
+   For a deployable plugin JAR, use `mvn clean package` instead; the jar is at `target/PyzaNodeGameSelector-*.jar`.
 
 ---
 
 ## Installation & configuration
 
 1. Drop the jar into your **Bukkit/Spigot/Paper** server's `plugins/` folder.
-
 2. Start the server once to generate `config.yml`, then stop it.
-
 3. Edit `plugins/PyzaNodeGameSelector/config.yml`:
-
-   ```yaml
+  ```yaml
    pyzanode:
      controller-url: "http://127.0.0.1:9451"
      api-token: "PASTE_API_TOKEN_HERE" # from PyzaNode dashboard Settings → API key
@@ -103,10 +77,8 @@ This folder (`PyzaNodeGameSelector/`) is a standalone **Maven** project.
            - "&7Join Survival."
          group: "Survival"
          preset-id: ""
-   ```
-
+  ```
 4. Ensure your proxies are set up to route to PyzaNode-managed servers (e.g. via short codes / server names).
-
 5. Start the server.
 
 ---
@@ -122,8 +94,8 @@ When a player clicks a game icon:
 
 1. The plugin looks up the **group** and **preset ID** from `config.yml`.
 2. Calls `getOrCreateServerForGroup(group, presetId)` on the PyzaNode API:
-   - If a running server exists → returns its connection info.
-   - Otherwise → scales the group, waits for a server to become running, then returns that.
+  - If a running server exists → returns its connection info.
+  - Otherwise → scales the group, waits for a server to become running, then returns that.
 3. Sends the player to the selected server using the BungeeCord `BungeeCord` / `Connect` plugin channel.
 
 ---
@@ -134,5 +106,4 @@ When a player clicks a game icon:
 - Use PlaceholderAPI to expose live PyzaNode metrics and show them in your GUI.
 - Add per-network / per-preset routing logic (e.g. different groups per world).
 
-Feel free to fork this folder into its own standalone repo (e.g. `PyzaNodeGameSelector`) and customize it for your network. 
-
+Feel free to fork this repo and customize it for your network. 
