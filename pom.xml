@@ -18,7 +18,7 @@
     <maven.compiler.target>17</maven.compiler.target>
     <!-- Build against a modern Spigot API but keep code compatible with Bukkit/Spigot/Paper across many versions. -->
     <spigot.version>1.20.4-R0.1-SNAPSHOT</spigot.version>
-    <pyzanode.api.version>1.0.0</pyzanode.api.version>
+    <pyzanode.api.version>Beta-0.2.0</pyzanode.api.version>
   </properties>
 
   <repositories>
