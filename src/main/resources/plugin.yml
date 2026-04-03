@@ -2,7 +2,7 @@ name: PyzaNodeGameSelector
 main: com.pyzatech.pyzanode.gameselector.PyzaNodeGameSelectorPlugin
 version: 1.0.0
 api-version: 1.13
-author: PyzaNode
+author: PyzaTech
 website: https://pyzanode.pyzatech.com
 description: Example GUI selector that uses PyzaNode to spin up and route players to game servers.
 
